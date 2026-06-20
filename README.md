@@ -2,6 +2,8 @@
 
 Aplicacao web mobile-first criada para treinar verbos alemaes por padrao vocalico, com foco em `Infinitive`, `Simple Past` e `Past Participle`.
 
+![Preview do German Verb Patterns](./docs/portfolio-preview.png)
+
 Projeto publicado:
 [https://german-verb-patterns.vercel.app/](https://german-verb-patterns.vercel.app/)
 

@@ -82,6 +82,8 @@ type InitialSession = {
   round: RoundState
 }
 
+const VOWEL_TOKENS = ['a', 'e', 'i', 'o', 'u'] as const
+
 function createDefaultProgress(): ProgressState {
   return {
     xp: 0,
@@ -193,22 +195,6 @@ function normalizeAnswer(value: string) {
 
 function isVowel(char: string) {
   return ['a', 'e', 'i', 'o', 'u'].includes(char.toLocaleLowerCase('de-DE'))
-}
-
-function fillVowelsInWord(word: string, vowels: string[]) {
-  let vowelIndex = 0
-
-  return Array.from(word)
-    .map((char) => {
-      if (!isVowel(char)) {
-        return char
-      }
-
-      const answer = vowels[vowelIndex] ?? ''
-      vowelIndex += 1
-      return answer
-    })
-    .join('')
 }
 
 function addReviewEntry(
@@ -334,17 +320,13 @@ function ColoredWord({ word, compact = false }: { word: string; compact?: boolea
 }
 
 function MaskedWord({
-  disabled,
-  onVowelChange,
-  values,
+  answer,
   word,
 }: {
-  disabled: boolean
-  onVowelChange: (index: number, value: string) => void
-  values: string[]
+  answer: string
   word: string
 }) {
-  let vowelIndex = 0
+  const answerLetters = Array.from(answer)
 
   return (
     <span className="masked-word" aria-label={word}>
@@ -357,31 +339,32 @@ function MaskedWord({
           )
         }
 
-        const currentIndex = vowelIndex
-        const value = values[currentIndex] ?? ''
-        vowelIndex += 1
+        const value = answerLetters[index]?.toLocaleLowerCase('de-DE') ?? ''
 
         return (
-          <input
-            aria-label={`Vogal ${currentIndex + 1}`}
-            autoCapitalize="none"
-            autoComplete="off"
-            className={`hidden-vowel-input ${isVowel(value) ? `vowel-fill-${value}` : ''}`}
-            data-vowel-index={currentIndex}
-            disabled={disabled}
-            inputMode="text"
+          <span
+            className={`hidden-vowel-slot ${isVowel(value) ? `vowel-fill-${value}` : ''}`}
             key={`${char}-${index}`}
-            maxLength={1}
-            onChange={(event) => onVowelChange(currentIndex, event.target.value)}
-            value={value}
-          />
+          >
+            {isVowel(value) ? value : ''}
+          </span>
         )
       })}
     </span>
   )
 }
 
-function SentenceLine({ sentence, answer }: { sentence: string; answer?: string }) {
+function SentencePrompt({
+  disabled,
+  onChange,
+  sentence,
+  value,
+}: {
+  disabled: boolean
+  onChange: (value: string) => void
+  sentence: string
+  value: string
+}) {
   const parts = sentence.split('_____')
 
   return (
@@ -390,8 +373,33 @@ function SentenceLine({ sentence, answer }: { sentence: string; answer?: string 
         <span key={`${part}-${index}`}>
           {part}
           {index < parts.length - 1 ? (
-            <span className={answer ? 'sentence-answer' : 'sentence-gap'}>
-              {answer ? <ColoredWord word={answer} compact /> : null}
+            <input
+              autoCapitalize="none"
+              autoComplete="off"
+              className="sentence-gap-input"
+              disabled={disabled}
+              inputMode="text"
+              onChange={(event) => onChange(event.target.value)}
+              value={value}
+            />
+          ) : null}
+        </span>
+      ))}
+    </p>
+  )
+}
+
+function SentenceLine({ sentence, answer }: { sentence: string; answer: string }) {
+  const parts = sentence.split('_____')
+
+  return (
+    <p className="sentence-line">
+      {parts.map((part, index) => (
+        <span key={`${part}-${index}`}>
+          {part}
+          {index < parts.length - 1 ? (
+            <span className="sentence-answer">
+              <ColoredWord word={answer} compact />
             </span>
           ) : null}
         </span>
@@ -401,21 +409,22 @@ function SentenceLine({ sentence, answer }: { sentence: string; answer?: string 
 }
 
 function PatternToken({ token }: { token: string }) {
+  const tokenLetters = Array.from(token)
+  const isVowelCluster = tokenLetters.every((char) =>
+    VOWEL_TOKENS.includes(char as (typeof VOWEL_TOKENS)[number]),
+  )
+
+  if (!isVowelCluster) {
+    return <span className="plain-pattern-token">{tokenLabel(token)}</span>
+  }
+
   return (
     <span className="pattern-token">
-      {Array.from(tokenLabel(token)).map((char, index) => {
-        const lower = char.toLocaleLowerCase('de-DE')
-
-        return isVowel(char) ? (
-          <span className={`vowel-box vowel-box-${lower}`} key={`${char}-${index}`}>
-            {char}
-          </span>
-        ) : (
-          <span className="plain-token" key={`${char}-${index}`}>
-            {char}
-          </span>
-        )
-      })}
+      {tokenLetters.map((char, index) => (
+        <span className={`vowel-box vowel-box-${char}`} key={`${char}-${index}`}>
+          {char}
+        </span>
+      ))}
     </span>
   )
 }
@@ -437,7 +446,7 @@ function App() {
   const [initialSession] = useState<InitialSession>(() => createInitialSession())
   const [progress, setProgress] = useState<ProgressState>(() => initialSession.progress)
   const [round, setRound] = useState<RoundState>(() => initialSession.round)
-  const [vowelAnswers, setVowelAnswers] = useState<string[]>([])
+  const [answer, setAnswer] = useState('')
   const [feedback, setFeedback] = useState<FeedbackState | null>(null)
   const [pendingResult, setPendingResult] = useState<PendingRoundResult | null>(null)
 
@@ -494,7 +503,6 @@ function App() {
     }
 
     const expected = round.verb[currentFormStep.key]
-    const answer = fillVowelsInWord(expected, vowelAnswers)
     const isCorrect = normalizeAnswer(answer) === normalizeAnswer(expected)
     recordAnswer(isCorrect)
 
@@ -516,28 +524,8 @@ function App() {
       ...current,
       step: nextStep,
     }))
-    setVowelAnswers([])
+    setAnswer('')
     setFeedback(null)
-  }
-
-  function handleVowelChange(index: number, value: string) {
-    const nextValue = Array.from(value).at(-1)?.toLocaleLowerCase('de-DE') ?? ''
-
-    setVowelAnswers((current) => {
-      const next = [...current]
-      next[index] = nextValue
-      return next
-    })
-
-    if (nextValue) {
-      requestAnimationFrame(() => {
-        const nextInput = document.querySelector<HTMLInputElement>(
-          `[data-vowel-index="${index + 1}"]`,
-        )
-
-        nextInput?.focus()
-      })
-    }
   }
 
   function submitPattern(pattern: string) {
@@ -574,7 +562,7 @@ function App() {
 
     setProgress(nextProgress)
     setRound(createRound(nextProgress, verbId(round.verb)))
-    setVowelAnswers([])
+    setAnswer('')
     setFeedback(null)
     setPendingResult(null)
   }
@@ -623,13 +611,16 @@ function App() {
 
         {currentFormStep ? (
           <form className="answer-flow" onSubmit={handleFormSubmit}>
-            <MaskedWord
+            <SentencePrompt
               disabled={Boolean(feedback)}
-              onVowelChange={handleVowelChange}
-              values={vowelAnswers}
+              onChange={setAnswer}
+              sentence={round.verb[currentFormStep.sentenceKey]}
+              value={answer}
+            />
+            <MaskedWord
+              answer={answer}
               word={round.verb[currentFormStep.key]}
             />
-            <SentenceLine sentence={round.verb[currentFormStep.sentenceKey]} />
 
             {feedback ? (
               <div className="feedback-strip" role="status">
@@ -644,7 +635,7 @@ function App() {
           </form>
         ) : (
           <div className="pattern-flow">
-            <div className="forms-stack" aria-label="Formas">
+            <div className="forms-stack" aria-label="Forms">
               <ColoredWord word={round.verb.infinitive} />
               <ColoredWord word={round.verb.praeteritum} />
               <ColoredWord word={round.verb.partizip} />
