@@ -6,17 +6,17 @@ const STORAGE_KEY = 'german-verb-patterns-progress-v1'
 
 const FORM_STEPS = [
   {
-    name: 'Infinitiv',
+    name: 'Infinitive',
     key: 'infinitive',
     sentenceKey: 'presentSentence',
   },
   {
-    name: 'Präteritum',
+    name: 'Simple Past',
     key: 'praeteritum',
     sentenceKey: 'praeteritumSentence',
   },
   {
-    name: 'Partizip II',
+    name: 'Past Participle',
     key: 'partizip',
     sentenceKey: 'partizipSentence',
   },
@@ -146,7 +146,7 @@ function familyToTokens(family: string) {
 }
 
 function tokenLabel(token: string) {
-  return token === 'other' ? 'outro' : token
+  return token === 'other' ? 'other' : token
 }
 
 function buildPatternChoices(correctFamily: string) {
@@ -504,7 +504,7 @@ function App() {
 
     setFeedback({
       tone: isCorrect ? 'success' : 'error',
-      title: isCorrect ? 'Certo' : 'Quase',
+      title: isCorrect ? 'Correct' : 'Almost',
       detail: expected,
     })
   }
@@ -560,7 +560,7 @@ function App() {
     setPendingResult(result)
     setFeedback({
       tone: isCorrect ? 'success' : 'error',
-      title: isCorrect ? 'Padrão certo' : 'Padrão certo',
+      title: 'Correct pattern',
       detail: round.verb.family,
     })
   }
@@ -592,29 +592,29 @@ function App() {
         </div>
       </header>
 
-      <section className="score-grid" aria-label="Progresso">
+      <section className="score-grid" aria-label="Progress">
         <div className="score-tile">
           <span>{progress.streak}</span>
           <small>streak</small>
         </div>
         <div className="score-tile">
           <span>{reviewCount}</span>
-          <small>revisão</small>
+          <small>review</small>
         </div>
         <div className="score-tile">
           <span>{masteredFamilies}/{families.length}</span>
-          <small>famílias</small>
+          <small>families</small>
         </div>
         <div className="score-tile">
           <span>{accuracy}%</span>
-          <small>acerto</small>
+          <small>accuracy</small>
         </div>
       </section>
 
       <section className={`practice-card ${feedback?.tone ?? ''}`}>
         <div className="card-topline">
-          <p>{currentFormStep?.name ?? 'Padrão'}</p>
-          <div className="step-dots" aria-label={`Etapa ${round.step + 1} de 4`}>
+          <p>{currentFormStep?.name ?? 'Pattern'}</p>
+          <div className="step-dots" aria-label={`Step ${round.step + 1} of 4`}>
             {[0, 1, 2, 3].map((step) => (
               <span className={step === round.step ? 'active' : ''} key={step} />
             ))}
@@ -639,7 +639,7 @@ function App() {
             ) : null}
 
             <button className="primary-action" type="submit">
-              {feedback ? 'Continuar' : 'Conferir'}
+              {feedback ? 'Continue' : 'Check'}
             </button>
           </form>
         ) : (
@@ -650,7 +650,7 @@ function App() {
               <ColoredWord word={round.verb.partizip} />
             </div>
 
-            <h2>Qual é o padrão de vogais?</h2>
+            <h2>What is the vowel pattern?</h2>
 
             <div className="choice-stack">
               {round.patternChoices.map((family) => (
@@ -675,7 +675,7 @@ function App() {
 
             {feedback ? (
               <button className="primary-action" onClick={completeRound} type="button">
-                Nova rodada
+                New round
               </button>
             ) : null}
           </div>
@@ -684,19 +684,19 @@ function App() {
 
       <section className="review-panel">
         <div>
-          <p className="panel-label">Revisão</p>
+          <p className="panel-label">Review</p>
           <strong>{reviewCount}</strong>
         </div>
         <div>
-          <p className="panel-label">Melhor streak</p>
+          <p className="panel-label">Best streak</p>
           <strong>{progress.bestStreak}</strong>
         </div>
       </section>
 
       <section className="family-panel">
         <div className="panel-header">
-          <p className="panel-label">Padrões</p>
-          <strong>{masteredFamilies} dominadas</strong>
+          <p className="panel-label">Patterns</p>
+          <strong>{masteredFamilies} mastered</strong>
         </div>
         <div className="family-list">
           {familySummaries.map((summary) => (
@@ -710,8 +710,8 @@ function App() {
               </div>
               <div className="family-meta">
                 <span>{summary.perfect}/{summary.attempts}</span>
-                <span>{summary.mistakes} erros</span>
-                <span>{summary.inReview} rev.</span>
+                <span>{summary.mistakes} mistakes</span>
+                <span>{summary.inReview} in review</span>
               </div>
             </article>
           ))}

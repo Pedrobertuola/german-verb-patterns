@@ -1,7 +1,7 @@
 {
   "name": "German Verb Patterns",
   "short_name": "Verb Patterns",
-  "description": "Treino mobile de padrões vocálicos em verbos alemães.",
+  "description": "Mobile PWA for practicing German verb vowel patterns.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
