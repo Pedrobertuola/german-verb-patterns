@@ -1,44 +1,44 @@
 # German Verb Patterns
 
-Aplicacao web mobile-first criada para treinar verbos alemaes por padrao vocalico, com foco em `Infinitive`, `Simple Past` e `Past Participle`.
+Mobile-first web app created to help learners practice German verbs through vowel-pattern recognition, with a focus on `Infinitive`, `Simple Past`, and `Past Participle`.
 
-![Preview do German Verb Patterns](./docs/portfolio-preview.png)
+![German Verb Patterns preview](./docs/portfolio-preview.png)
 
-Projeto publicado:
+Live project:
 [https://german-verb-patterns.vercel.app/](https://german-verb-patterns.vercel.app/)
 
-## Sobre o projeto
+## About the project
 
-O **German Verb Patterns** foi desenvolvido como um projeto de portfolio com foco em experiencia mobile, clareza visual e aprendizado ativo. A proposta e transformar a memorizacao de verbos alemaes em um fluxo rapido, leve e interativo, destacando familias de vogais e reforcando reconhecimento de padroes.
+**German Verb Patterns** was built as a portfolio project focused on mobile experience, visual clarity, and active learning. The idea is to turn German verb memorization into a fast, lightweight, and interactive flow, highlighting vowel families and reinforcing pattern recognition.
 
-Um dos pontos centrais do projeto e o fato de ele ser um **PWA (Progressive Web App)**. Isso significa que a aplicacao pode ser instalada no celular, aberta em tela cheia e usada com comportamento muito mais proximo de um app nativo, o que reforca a ideia de estudo rapido e recorrente.
+One of the key aspects of the project is that it is a **PWA (Progressive Web App)**. This means the app can be installed on a phone, opened in full-screen mode, and used with behavior much closer to a native app, which supports the idea of quick and repeated study sessions.
 
-## O que a aplicacao faz
+## What the app does
 
-- Treina um verbo por rodada.
-- Divide a pratica em quatro etapas: forma base, simple past, past participle e identificacao do padrao vocalico.
-- Salva progresso localmente com `localStorage`.
-- Mantem sistema de revisao para verbos errados.
-- Exibe XP, streak, familias dominadas e progresso por padrao.
-- Foi pensada para uso em celular, com interacoes grandes, feedback imediato e layout focado em toque.
+- Trains one verb per round.
+- Splits practice into four steps: base form, simple past, past participle, and vowel-pattern identification.
+- Saves progress locally with `localStorage`.
+- Keeps a review system for missed verbs.
+- Shows XP, streak, mastered families, and progress by pattern.
+- Was designed for mobile use, with large interactions, instant feedback, and a touch-friendly layout.
 
 ## Stack
 
 - React
 - Vite
 - TypeScript
-- PWA com manifest e service worker
-- Deploy em Vercel
+- PWA with manifest and service worker
+- Vercel deployment
 
-## Destaques para portfolio
+## Portfolio highlights
 
-Este projeto demonstra:
+This project showcases:
 
-- construcao de interface mobile-first;
-- transformacao de regra linguistica em mecanica de produto;
-- persistencia de progresso no navegador;
-- desenho de experiencia de estudo com gamificacao;
-- empacotamento em formato PWA para uso instalavel.
+- mobile-first interface design;
+- translation of a language-learning rule into product mechanics;
+- local progress persistence in the browser;
+- study experience design with gamification;
+- packaging as an installable PWA.
 
 ## Scripts
 
