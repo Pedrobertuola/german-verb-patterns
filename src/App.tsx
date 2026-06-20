@@ -22,20 +22,6 @@ const FORM_STEPS = [
   },
 ] as const
 
-const PATTERN_TOKENS = [
-  'a',
-  'e',
-  'i',
-  'o',
-  'u',
-  'ei',
-  'ie',
-  '-en',
-  'te',
-  't',
-  'other',
-]
-
 type StepIndex = 0 | 1 | 2 | 3
 type FormStepIndex = 0 | 1 | 2
 
@@ -157,10 +143,6 @@ function familyToTokens(family: string) {
   }
 
   return family.split('-')
-}
-
-function tokensToFamily(tokens: string[]) {
-  return tokens.join('-')
 }
 
 function tokenLabel(token: string) {
@@ -457,7 +439,6 @@ function App() {
   const [round, setRound] = useState<RoundState>(() => initialSession.round)
   const [vowelAnswers, setVowelAnswers] = useState<string[]>([])
   const [feedback, setFeedback] = useState<FeedbackState | null>(null)
-  const [selectedTokens, setSelectedTokens] = useState<string[]>([])
   const [pendingResult, setPendingResult] = useState<PendingRoundResult | null>(null)
 
   const familySummaries = useMemo(() => buildFamilySummaries(progress), [progress])
@@ -559,32 +540,6 @@ function App() {
     }
   }
 
-  function chooseToken(token: string) {
-    if (feedback) {
-      return
-    }
-
-    setSelectedTokens((current) => {
-      if (token === 'other') {
-        return ['other']
-      }
-
-      const next = current.filter((item) => item !== 'other')
-
-      if (next.length >= 3) {
-        return next
-      }
-
-      return [...next, token]
-    })
-  }
-
-  function clearPattern() {
-    if (!feedback) {
-      setSelectedTokens([])
-    }
-  }
-
   function submitPattern(pattern: string) {
     if (feedback || !pattern) {
       return
@@ -610,11 +565,6 @@ function App() {
     })
   }
 
-  function handlePatternSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    submitPattern(tokensToFamily(selectedTokens))
-  }
-
   function completeRound() {
     if (!pendingResult) {
       return
@@ -626,7 +576,6 @@ function App() {
     setRound(createRound(nextProgress, verbId(round.verb)))
     setVowelAnswers([])
     setFeedback(null)
-    setSelectedTokens([])
     setPendingResult(null)
   }
 
@@ -716,36 +665,6 @@ function App() {
                 </button>
               ))}
             </div>
-
-            <form className="builder" onSubmit={handlePatternSubmit}>
-              <div className="selected-pattern">
-                {selectedTokens.length > 0 ? (
-                  <PatternDisplay family={tokensToFamily(selectedTokens)} />
-                ) : (
-                  <span />
-                )}
-              </div>
-              <div className="token-grid">
-                {PATTERN_TOKENS.map((token) => (
-                  <button
-                    disabled={Boolean(feedback)}
-                    key={token}
-                    onClick={() => chooseToken(token)}
-                    type="button"
-                  >
-                    <PatternToken token={token} />
-                  </button>
-                ))}
-              </div>
-              <div className="builder-actions">
-                <button disabled={Boolean(feedback)} onClick={clearPattern} type="button">
-                  Limpar
-                </button>
-                <button disabled={selectedTokens.length === 0 || Boolean(feedback)} type="submit">
-                  Conferir
-                </button>
-              </div>
-            </form>
 
             {feedback ? (
               <div className="feedback-strip pattern-feedback" role="status">
