@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="112" fill="#fffdf8"/>
+  <rect x="44" y="44" width="424" height="424" rx="96" fill="#f7f5f1"/>
+  <rect x="92" y="126" width="84" height="84" rx="22" fill="#ef7ce8"/>
+  <rect x="214" y="126" width="84" height="84" rx="22" fill="#ffd21f"/>
+  <rect x="336" y="126" width="84" height="84" rx="22" fill="#ff9f24"/>
+  <text x="121" y="190" fill="#ffffff" font-family="Arial, sans-serif" font-size="74" font-weight="900">i</text>
+  <text x="236" y="190" fill="#ffffff" font-family="Arial, sans-serif" font-size="74" font-weight="900">a</text>
+  <text x="358" y="190" fill="#ffffff" font-family="Arial, sans-serif" font-size="74" font-weight="900">u</text>
+  <text x="91" y="337" fill="#625c70" font-family="Arial, sans-serif" font-size="78" font-weight="900">Verb</text>
+  <text x="91" y="404" fill="#625c70" font-family="Arial, sans-serif" font-size="58" font-weight="800">Patterns</text>
+</svg>

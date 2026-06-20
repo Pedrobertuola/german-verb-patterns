@@ -1,0 +1,19 @@
+{
+  "name": "German Verb Patterns",
+  "short_name": "Verb Patterns",
+  "description": "Treino mobile de padrões vocálicos em verbos alemães.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffdf8",
+  "theme_color": "#fffdf8",
+  "icons": [
+    {
+      "src": "/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
